@@ -114,9 +114,15 @@
     const textInput = document.getElementById('textInput')
     const formWrapper = document.getElementById('form-wrapper')
     const inputGroup = document.querySelector('.input-group')
+    /**
+     * @type {HTMLButtonElement}
+     */
+    const buttonSubmit = document.getElementById('button-submit')
 
     formWrapper.addEventListener('submit', (e) => {
       e.preventDefault()
+      buttonSubmit.style.cursor = 'not-allowed'
+
       const content = textInput.value
       if (content === '') inputGroup.innerHTML = '<p class="text-red">Please enter the tracked link</p>'
 
@@ -134,6 +140,7 @@
           return res.text()
         })
         .then(url => {
+          buttonSubmit.style.cursor = 'pointer'
           inputGroup.innerHTML = `<input class="input-text input-size" type="text" value="${url}" />
           <div>
             <button class="button input-size" onclick="copyToClipboard('${url}')">COPY</button>
