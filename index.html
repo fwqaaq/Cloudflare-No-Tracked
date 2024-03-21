@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>No tracked link for bilibili and xhs</title>
+  <style>
+    .text-center {
+      text-align: center;
+    }
+
+    .text-gray {
+      color: #b1bac0;
+    }
+
+    .text-red {
+      color: #dc3545;
+    }
+
+    hr {
+      margin-block: 1rem;
+      border: 0;
+      border-top: 1px solid rgba(0, 0, 0, .1);
+    }
+
+    * {
+      margin: 0%;
+      padding: 0%;
+    }
+
+    body {
+      background-color: #cfdae4;
+      font-family: system-ui, —apple-system, Segoe UI, Rototo, Emoji, Helvetica, Arial, sans-serif;
+    }
+
+    .container {
+      max-width: 40rem;
+      background-color: #fff;
+      padding-block: 2rem;
+      margin: 4rem auto;
+      border-radius: 1rem;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .input-wrapper {
+      display: flex;
+      justify-content: center;
+      margin: 0 2rem;
+      align-items: center;
+    }
+
+    .input-size {
+      padding: .375rem .75rem;
+      line-height: 1.5;
+    }
+
+    .input-text {
+      display: block;
+      width: 100%;
+      caret-color: #01d0ff;
+    }
+
+    .button-submit {
+      background-color: #007BFF;
+      color: #fff;
+    }
+
+    .button {
+      border: none;
+      margin-inline-start: 1rem;
+      border-radius: .25rem;
+      cursor: pointer;
+    }
+
+    .button-submit:hover {
+      background-color: #1067c5;
+    }
+
+    .button-copy:hover {
+      background-color: #495057;
+    }
+
+    .input-group {
+      display: flex;
+      align-items: stretch;
+      margin: 0 2rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1 class="text-center">Cloudflare No-Tracked Hosting</h1>
+    <p class="text-center text-gray">Prevent bilibili and xhs from tracking links</p>
+    <hr />
+
+    <form class="input-wrapper" id="form-wrapper">
+      <input class="input-text input-size" type="text" id="textInput">
+      <button class="button button-submit input-size" type="submit" id="button-submit">SUBMIT</button>
+    </form>
+
+    <hr />
+
+    <div class="input-group"></div>
+
+    <p style="padding-block-start: 1rem;" class="text-center"><a
+        href="https://github.com/fwqaaq/Cloudflare-No-Tracked">GitHub</a></p>
+  </div>
+  <script>
+    /**
+     * @type {HTMLInputElement}
+     */
+    const textInput = document.getElementById('textInput')
+    const formWrapper = document.getElementById('form-wrapper')
+    const inputGroup = document.querySelector('.input-group')
+
+    formWrapper.addEventListener('submit', (e) => {
+      e.preventDefault()
+      const content = textInput.value
+      if (content === '') inputGroup.innerHTML = '<p class="text-red">Please enter the tracked link</p>'
+
+      // get the real link
+      const reg = /[\w\W]*?(https?:\/\/(?:b23.tv|xhslink.com)\/[a-zA-Z0-9]*)[\w\W]*?/
+      const link = reg.exec(content)[1]
+
+      if (!link) inputGroup.innerHTML = '<p class="text-red">Please enter the b23.tv or xhslink.com link</p>'
+
+      fetch(`https://b.fwqaq.us?bilibili=${link}`, {
+        mode: 'cors'
+      })
+        .then(res => {
+          if (!res.ok) console.error('error')
+          return res.text()
+        })
+        .then(url => {
+          inputGroup.innerHTML = `<input class="input-text input-size" type="text" value="${url}" />
+          <div>
+            <button class="button input-size" onclick="copyToClipboard('${url}')">COPY</button>
+          </div>`
+        })
+    })
+
+    /**
+     * 
+     * @param {string} text 
+     */
+    async function copyToClipboard(text) {
+      try {
+        await navigator.clipboard.writeText(text)
+      } catch (err) {
+        alert('Failed to copy!')
+      }
+    }
+
+
+  </script>
+</body>
+
+</html>
