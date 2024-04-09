@@ -1,4 +1,20 @@
-<!DOCTYPE html>
+const headers = {
+  'content-type': 'text/plain',
+}
+
+export default {
+  /**
+   *
+   * @param {import("@cloudflare/workers-types").Request} request
+   * @param {*} env
+   * @param {import("@cloudflare/workers-types").ExecutionContext} ctx
+   * @returns
+   */
+  async fetch(request, _env, _ctx) {
+    const tracked = new URL(request.url)
+    if (tracked.pathname === '/') {
+      return new Response(
+        `<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -121,37 +137,30 @@
 
     formWrapper.addEventListener('submit', (e) => {
       e.preventDefault()
-      buttonSubmit.style.cursor = 'not-allowed'
 
       const content = textInput.value
-      if (content === '') inputGroup.innerHTML = '<p class="text-red">Please enter the tracked link</p>'
+      if (content === '') return inputGroup.innerHTML = '<p class="text-red">Please enter the tracked link</p>'
 
       // get the real link
-      const reg = /[\w\W]*?(https?:\/\/(?:b23.tv|xhslink.com)\/[a-zA-Z0-9]*)[\w\W]*?/
-      const link = reg.exec(content)[1]
+      const reg = /[\\w\\W]*?(https?:\\/\\/(?:b23.tv|xhslink.com)\\/[a-zA-Z0-9]*)[\\w\\W]*?/
+      const link = reg.exec(content)?.[1]
 
-      if (!link) inputGroup.innerHTML = '<p class="text-red">Please enter the b23.tv or xhslink.com link</p>'
+      if (!link) return inputGroup.innerHTML = '<p class="text-red">Please enter the b23.tv or xhslink.com link</p>'
 
-      fetch(`https://b.fwqaq.us?bilibili=${link}`, {
-        mode: 'cors'
+			fetch(\`/api/tracked?value=\${link}\`)
+			.then(res => {
+				buttonSubmit.style.cursor = 'not-allowed'
+				if (!res.ok) return inputGroup.innerHTML = '<p class="text-red">Please enter the full b23.tv or xhslink.com link</p>'
+				return res.text()
+			})
+			.then(url => {
+        buttonSubmit.style.cursor = 'pointer'
+        inputGroup.innerHTML = \`<input class="input-text input-size" type="text" value="\${url}" />
+        <div>
+          <button class="button input-size" onclick="copyToClipboard('\${url}')">COPY</button>
+        </div>\`
       })
-        .then(res => {
-          if (!res.ok) console.error('error')
-          return res.text()
-        })
-        .then(url => {
-          buttonSubmit.style.cursor = 'pointer'
-          inputGroup.innerHTML = `<input class="input-text input-size" type="text" value="${url}" />
-          <div>
-            <button class="button input-size" onclick="copyToClipboard('${url}')">COPY</button>
-          </div>`
-        })
     })
-
-    /**
-     * 
-     * @param {string} text 
-     */
     async function copyToClipboard(text) {
       try {
         await navigator.clipboard.writeText(text)
@@ -160,8 +169,27 @@
       }
     }
 
-
   </script>
 </body>
 
-</html>
+</html>`,
+        { headers: { 'content-type': 'text/html' } }
+      )
+    }
+
+    if (tracked.pathname === '/api/tracked') {
+      const value = tracked.searchParams.get('value')
+      if (!value || !(value.includes('b23.tv') || value.includes('xhslink.com')))
+        return new Response('请发送带有正确跟踪短链的参数', { headers, status: 404 })
+
+      const res = await fetch(value, { redirect: 'manual' })
+      const location = res.headers.get('location') ?? null
+      if (!location)
+        return new Response('没有完整的跟踪链接，请查找输入是否正确', { headers, status: 404 })
+      const source = new URL(location)
+      return new Response(source.origin + source.pathname, { headers })
+    }
+
+    return new Response('404', { headers })
+  },
+}

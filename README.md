@@ -4,14 +4,26 @@
 
 你也可以使用 Telegram 机器人，参考 Demo：<https://t.me/fwqaaq_bot>
 
-## Cloudflare Page 部署
+## Cloudflare Worker 部署
 
 >[!NOTE]
 >需要 Cloudflare 账户
 
-1. 首先 fork 该仓库
-2. 然后登陆 Cloudflare，在首页打开【Workers & Pages】>> 二级菜单的【Overview】>> 点击主页的【Create application】按钮 >> 点击【Pages】>> 最后点击【Connect to Git】即可
+1. 首先克隆该仓库
 
-## LISENCE
+   ```bash
+   git clone git@github.com:fwqaaq/Cloudflare-No-Tracked.git
+   ```
 
-[MIT](./LICENSE) Copyright (c) 2024 Mr.fwqaaq.
+2. 需要 cloudflare 账户，或者使用 npm、yarn 包管理器
+
+   ```bash
+   pnpm i
+   # 如果 wrangler 未登陆，需要
+   # pnpx wrangler login
+   pnpm deploy
+   ```
+
+## LICENSE
+
+[MIT](./LICENSE) Copyright (c) 2024 fwqaaq.
