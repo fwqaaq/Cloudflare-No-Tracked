@@ -157,7 +157,7 @@ export default {
         buttonSubmit.style.cursor = 'pointer'
         inputGroup.innerHTML = \`<input class="input-text input-size" type="text" value="\${url}" />
         <div>
-          <button class="button input-size" onclick="copyToClipboard('\${url}')">COPY</button>
+          <button class="button button-copy input-size" onclick="copyToClipboard('\${url}')">COPY</button>
         </div>\`
       })
     })
