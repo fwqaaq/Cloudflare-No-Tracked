@@ -1,3 +1,6 @@
 name = "cloudflare-no-tracked"
-main = "./index.js"
+main = "src/index.js"
 compatibility_date = "2022-10-10"
+
+[site]
+bucket = "/public"

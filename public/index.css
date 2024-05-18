@@ -1,0 +1,80 @@
+.text-center {
+  text-align: center;
+}
+
+.text-gray {
+  color: #b1bac0;
+}
+
+.text-red {
+  color: #dc3545;
+}
+
+hr {
+  margin-block: 1rem;
+  border: 0;
+  border-top: 1px solid rgba(0, 0, 0, .1);
+}
+
+* {
+  margin: 0%;
+  padding: 0%;
+}
+
+body {
+  background-color: #cfdae4;
+  font-family: system-ui, —apple-system, Segoe UI, Rototo, Emoji, Helvetica, Arial, sans-serif;
+}
+
+.container {
+  max-width: 40rem;
+  background-color: #fff;
+  padding-block: 2rem;
+  margin: 4rem auto;
+  border-radius: 1rem;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+.input-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 0 2rem;
+  align-items: center;
+}
+
+.input-size {
+  padding: .375rem .75rem;
+  line-height: 1.5;
+}
+
+.input-text {
+  display: block;
+  width: 100%;
+  caret-color: #01d0ff;
+}
+
+.button-submit {
+  background-color: #007BFF;
+  color: #fff;
+}
+
+.button {
+  border: none;
+  margin-inline-start: 1rem;
+  border-radius: .25rem;
+  cursor: pointer;
+}
+
+.button-submit:hover {
+  background-color: #1067c5;
+}
+
+.button-copy:hover {
+  background-color: #495057;
+}
+
+.input-group {
+  display: flex;
+  align-items: stretch;
+  margin: 0 2rem;
+}
